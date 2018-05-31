@@ -1,0 +1,37 @@
+<div class="stretch-absolute flex-layout vertical">
+<div class="auto-flex-size relative">
+    <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
+      <sme-master-view>
+          <div class="stretch-absolute flex-layout vertical">
+              <sme-tool-header>Apps and Features</sme-tool-header>
+              <div class="overflow-margins table-indent">
+                This component provides a list of all currently installed apps and features on the current node.
+              </div>
+              <div class="sme-layout-relative sme-position-flex-auto">
+                <div class="sme-layout-relative sme-position-flex-auto">
+                  <sme-data-table #smeDataTable [items]="processes" style="height: 300px;" class="sme-layout-absolute sme-position-inset-none" [defaultSortColumn]="customSortColumn" [defaultSortMode]="1">
+                    <sme-data-table-column field="displayName" header="Name" sortable="true" width="50%"></sme-data-table-column>
+                    <!-- <sme-data-table-column  #customSortColumn  field="commandLine" header="exe" sortable="true">
+                      <ng-template let-data>
+                        <span class="status-icon sme-icon sme-icon-cluster"></span>
+                        <strong>{{data|json}}</strong>
+                        <input style="width:60px" />
+                    </ng-template>
+                    </sme-data-table-column> -->
+                    <!-- <sme-data-table-column field="cpuPercent" header="CPU %" sortable="true">
+                      <ng-template let-data> -->
+                        <!-- <span class="status-icon sme-icon sme-icon-cluster"></span> -->
+                        <!-- <strong>{{data.cpuPercent}}</strong> -->
+                        <!-- <button onclick="alert('Hello~~~')">I'm a button. I need focus.</button>
+                      </ng-template> -->
+                   <!-- </sme-data-table-column> -->
+                    <sme-data-table-column field="displayName" header="Publisher" sortable="true"></sme-data-table-column>
+                  </sme-data-table>
+                </div>
+              </div>
+            </div>
+        </sme-master-view>
+</div>
+</div>
+
+
