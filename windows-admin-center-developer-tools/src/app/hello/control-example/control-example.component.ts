@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs/Rx';
 import { Strings } from '../../../generated/strings';
 

@@ -1,2 +1,2 @@
- Param([string]$name)
- get-service -Name $name
+Get-AppxPackage
+Write-Output "YES I'M RUNNING"

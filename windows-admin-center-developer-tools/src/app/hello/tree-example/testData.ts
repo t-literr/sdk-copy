@@ -27,7 +27,7 @@ export var TestData = <TreeNodeDataItem>{
         label: 'PowerShell',
         type: '',
         expanded: true,
-        data: 'PowerShell',
+        data: 'WMI',
         isLeaf: true
       }
     },

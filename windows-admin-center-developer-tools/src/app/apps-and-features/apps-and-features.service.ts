@@ -38,9 +38,11 @@ export class AppsAndFeaturesService {
      *  This method illustrates how to execute a PowerShell script within the context of SME / Honolulu.
      */
     public getService(session: PowerShellSession, serviceName: string): Observable<any[]> {
+        console.log("about to run get service")
         let command = PowerShell.createScript(PowerShellScripts.Get_Service, { name: serviceName });
         return this.appContextService.powerShell.run(session, command)
             .map(response => {
+                console.log(response)
                 return response && response.results && response.results[0];
             });
     }

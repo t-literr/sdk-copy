@@ -85,13 +85,14 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     */
    private getServices() {
     console.log("get services")
+    this.processes = [];
     this.serviceSubscription = this.appsService.getService(this.psSession, 'winrm').subscribe(
         (service: any) => {
             this.loading = false;
             if (service) {
                 this.serviceDisplayName = service.displayName;
                 this.serviceDefinition = service;
-                this.processes.push(service)
+                this.processes.push(service.displayName)
             } else {
                 this.serviceDisplayName = this.strings.HelloWorld.notFound;
             }
