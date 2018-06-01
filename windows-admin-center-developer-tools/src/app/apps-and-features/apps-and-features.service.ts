@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { AppContextService, HttpService } from '@microsoft/windows-admin-center-sdk/angular';
-import { Cim, Http, PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
+import { AppContextService} from '@microsoft/windows-admin-center-sdk/angular';
+import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
 import { Observable } from 'rxjs';
 import { PowerShellScripts } from '../../generated/powerShell-scripts';
 import { Strings } from '../../generated/strings';
@@ -14,25 +14,7 @@ export class AppsAndFeaturesService {
     public static psKey = 'sme.seed';
     private psSession: PowerShellSession;
 
-    constructor(private appContextService: AppContextService, private http: HttpService) {
-    }
-
-    /**
-     *  This method illustrates how to execute a CIM / WMI call within the context of SME / Honolulu.
-     */
-    public getProcesses(): Observable<any[]> {
-        return this.appContextService.cim.getInstanceMultiple(
-            this.appContextService.activeConnection.nodeName,
-            Cim.namespace.managementTools2,
-            Cim.cimClass.msftMTProcesses)
-            .map((response: any) => {
-                let items: any[] = [];
-                for (let item of response.value) {
-                    items.push(item.properties);
-                }
-
-                return items;
-            });
+    constructor(private appContextService: AppContextService) {
     }
 
     /**
@@ -48,7 +30,7 @@ export class AppsAndFeaturesService {
                     for (const item of response.results) {
                         if (item) {
                             const data: AppData = {
-                                name: item.name,
+                                displayName: item.displayName,
                                 publisher: item.publisher
                             };
                             result.push(data);
@@ -57,10 +39,5 @@ export class AppsAndFeaturesService {
                 }
                 return result;
             });
-    }
-
-    public getGatewayRestResponse(): Observable<string> {
-        return this.http.get('http://localhost:6516/api/nodes/matwils-2016.redmond.corp.microsoft.com/features/RedmondWeather')
-        .map((response) => response.response.query.results);
     }
 }

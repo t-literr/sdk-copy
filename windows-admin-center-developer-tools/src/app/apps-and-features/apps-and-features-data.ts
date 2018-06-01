@@ -6,7 +6,7 @@
  *  };
  */
 export class AppData {
-    public name: string;
+    public displayName: string;
     public publisher: string;
 }
 

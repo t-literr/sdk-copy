@@ -60,8 +60,6 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
             this.loading = false;
             if (result) {
                 this.apps = result
-                console.log("got result")
-                console.log(result)
             } else {
                 this.appName = this.strings.HelloWorld.notFound;
             }

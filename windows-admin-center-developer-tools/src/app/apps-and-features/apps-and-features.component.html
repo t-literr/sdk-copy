@@ -10,13 +10,12 @@
               <div class="sme-layout-relative sme-position-flex-auto">
                 <div class="sme-layout-relative sme-position-flex-auto">
                   <sme-data-table #smeDataTable [items]="apps" style="height: 300px;" class="sme-layout-absolute sme-position-inset-none" [defaultSortColumn]="customSortColumn" [defaultSortMode]="1">
-                    <sme-data-table-column field="name" header="Name" sortable="true" width="50%"></sme-data-table-column>
+                    <sme-data-table-column field="displayName" header="Name" sortable="true" width="50%"></sme-data-table-column>
                     <sme-data-table-column field="publisher" header="Publisher" sortable="true"></sme-data-table-column>
+                    <sme-data-table-column header="Add" sortable="false"></sme-data-table-column>
                   </sme-data-table>
-
                 </div>
-
-              </div>
+                </div>
             </div>
         </sme-master-view>
 </div>
