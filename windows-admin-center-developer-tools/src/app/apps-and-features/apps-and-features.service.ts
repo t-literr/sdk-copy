@@ -7,6 +7,7 @@ import { Cim, Http, PowerShell, PowerShellSession } from '@microsoft/windows-adm
 import { Observable } from 'rxjs';
 import { PowerShellScripts } from '../../generated/powerShell-scripts';
 import { Strings } from '../../generated/strings';
+import { AppData } from './apps-and-features-data';
 
 @Injectable()
 export class AppsAndFeaturesService {
@@ -38,12 +39,23 @@ export class AppsAndFeaturesService {
      *  This method illustrates how to execute a PowerShell script within the context of SME / Honolulu.
      */
     public getService(session: PowerShellSession, serviceName: string): Observable<any[]> {
-        console.log("about to run get service")
+        console.log("Service Class")
         let command = PowerShell.createScript(PowerShellScripts.Get_Service, { name: serviceName });
         return this.appContextService.powerShell.run(session, command)
             .map(response => {
-                console.log(response)
-                return response && response.results && response.results[0];
+                const result: AppData[] = [];
+                if (response) {
+                    for (const item of response.results) {
+                        if (item) {
+                            const data: AppData = {
+                                name: item.name,
+                                publisher: item.publisher
+                            };
+                            result.push(data);
+                        }
+                    }
+                }
+                return result;
             });
     }
 

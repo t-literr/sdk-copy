@@ -33,7 +33,7 @@
       "entryPointType": "tool",
       "name": "dev",
       "urlName": "dev",
-      "displayName": "Apps and Features",
+      "displayName": "Dev Guide",
       "description": "apps and features",
       "icon": "sme-icon:icon-win-server",
       "path": "/dev",
@@ -74,8 +74,8 @@
     {
       "locale": "default",
       "strings": {
-        "displayName": "Introduction",
-        "description": "Solution detailing all things needed to begin building extensions for Windows Admin Center.",
+        "displayName": "Apps and Features",
+        "description": "Solution detailing all installed applications on the current node.",
         "connectionsListHeader": "Connections",
         "overviewName": "Getting Started",
         "overviewDescription": "A brief intro into the new dev tools",
@@ -89,8 +89,8 @@
     {
       "locale": "en-US",
       "strings": {
-        "displayName": "Introduction",
-        "description": "Solution detailing all things needed to begin building extensions for Project Honolulu.",
+        "displayName": "Apps and Features",
+        "description": "Solution detailing all installed applications on the current node.",
         "connectionsListHeader": "Connections",
         "overviewName": "Getting Started",
         "overviewDescription": "A brief intro into the new dev tools",
