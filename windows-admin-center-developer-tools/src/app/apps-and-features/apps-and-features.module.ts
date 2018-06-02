@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     ActionsModule,
     AlertBarModule,
@@ -11,7 +11,8 @@ import {
     SmeStylesModule,
     SplitViewModule,
     SvgModule,
-    ToolHeaderModule
+    ToolHeaderModule,
+    SmeFormsModule
 } from '@microsoft/windows-admin-center-sdk/angular';
 import { AppsAndFeaturesComponent } from './apps-and-features.component';
 import { AppsAndFeaturesRouting } from './apps-and-features.routing';
@@ -29,18 +30,19 @@ import { ContextMenuModule, SharedModule, TreeTableModule } from 'primeng/primen
     imports: [
         ActionsModule,
         AlertBarModule,
+        AppsAndFeaturesRouting,
         CommonModule,
         DataTableModule,
         DetailsModule,
         FormsModule,
         LoadingWheelModule,
+        MasterViewModule,
+        SmeFormsModule,
         SmeStylesModule,
-        SvgModule,
-        AppsAndFeaturesRouting,
-        ToolHeaderModule,
-        TreeTableModule,
         SplitViewModule,
-        MasterViewModule
+        SvgModule,
+        ToolHeaderModule,
+        TreeTableModule
     ]
 })
 export class AppsAndFeaturesModule { }

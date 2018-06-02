@@ -1,4 +1,5 @@
-<div class="stretch-absolute flex-layout vertical">
+<!DOCTYPE HTML>
+<div class="stretch-absolute flex-layout sme-position-inset-none vertical">
 <div class="auto-flex-size relative">
     <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
       <sme-master-view>
@@ -12,14 +13,24 @@
                   <sme-data-table #smeDataTable [items]="apps" style="height: 300px;" class="sme-layout-absolute sme-position-inset-none" [defaultSortColumn]="customSortColumn" [defaultSortMode]="1">
                     <sme-data-table-column field="displayName" header="Name" sortable="true" width="50%"></sme-data-table-column>
                     <sme-data-table-column field="publisher" header="Publisher" sortable="true"></sme-data-table-column>
-                    <sme-data-table-column header="Add" sortable="false"></sme-data-table-column>
+                    <sme-data-table-column header="Remove" sortable="false">
+                        <ng-template>
+                            <button (click)="removeApp()">Remove App</button>
+                        </ng-template>
+                    </sme-data-table-column>
                   </sme-data-table>
                 </div>
                 </div>
             </div>
         </sme-master-view>
 </div>
+
+<div class="sme-layout-relative sme-documentation">
+    <div class="sme-documentation-example">
+        <form>
+            <sme-form-field type="text" name="appPackageName" [(ngModel)]="model.name.value" [label]="model.name.label" [required]="true"></sme-form-field>
+        </form>
+    </div>
 </div>
-
-
+</div>
 

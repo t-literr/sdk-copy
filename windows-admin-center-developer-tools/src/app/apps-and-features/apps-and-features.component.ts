@@ -3,7 +3,7 @@
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular';
+import { AppContextService, CheckValidationEventArgs, ValidationAlerts, ValidationAlertSeverity } from '@microsoft/windows-admin-center-sdk/angular';
 import { Logging, LogLevel } from '@microsoft/windows-admin-center-sdk/core';
 import { AjaxError } from 'rxjs/observable/dom/AjaxObservable';
 import { Subscription } from 'rxjs/Subscription';
@@ -22,9 +22,6 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     public errorMessage: string;
     public strings = MsftSme.resourcesStrings<Strings>();
 
-
-
-
     // needed for ps function
     private appSubscription: Subscription;
     private psSession: PowerShellSession;
@@ -32,9 +29,13 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     public appName: string;
     public appPublisher: any;
 
+    // needed for form to add new package
+    public model: any;
+
     constructor(private appContextService: AppContextService,
         private appsService: AppsAndFeaturesService) {
         this.strings = MsftSme.resourcesStrings<Strings>();
+        this.model = this.createModel();
     }
 
     public ngOnInit(): void {
@@ -50,24 +51,41 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         // cleanup any calls here.
     }
 
+    public removeApp(): void {
+        console.log("GET IT OUTTA HERE!")
+    }
+
+    /**
+     * Resets the form controls data model to a predefined initial state
+     */
+    public createModel() {
+        return {
+            name: {
+                label: 'Name',
+                value: ''
+            }
+        };
+    }
+
         /*
     //  The Get Services call on the "hello service" initiates a PowerShell session executes
     */
    private getApps() {
-    console.log("Components Class")
-    this.appSubscription = this.appsService.getService(this.psSession, 'winrm').subscribe(
-        (result: any) => {
-            this.loading = false;
-            if (result) {
-                this.apps = result
-            } else {
-                this.appName = this.strings.HelloWorld.notFound;
+        console.log("Components Class")
+        this.appSubscription = this.appsService.getService(this.psSession, 'winrm').subscribe(
+            (result: any) => {
+                this.loading = false;
+                if (result) {
+                    this.apps = result
+                } else {
+                    this.appName = this.strings.HelloWorld.notFound;
+                }
+            },
+            (error: AjaxError) => {
+                this.errorMessage = Net.getErrorMessage(error);
+                this.loading = false;
             }
-        },
-        (error: AjaxError) => {
-            this.errorMessage = Net.getErrorMessage(error);
-            this.loading = false;
-        }
-    );
-}
+        );
+
+    }
 }
