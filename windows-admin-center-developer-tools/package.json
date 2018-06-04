@@ -56,7 +56,7 @@
     "chart.js": "2.4.0",
     "codelyzer": "^4.0.2",
     "core-js": "2.5.3",
-    "gulp": "3.9.1",
+    "gulp": "^3.9.1",
     "gulp-batch": "1.0.5",
     "gulp-clean": "0.3.2",
     "gulp-inline-ng2-template": "4.1.0",

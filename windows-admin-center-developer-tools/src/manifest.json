@@ -75,7 +75,7 @@
       "locale": "default",
       "strings": {
         "displayName": "Apps and Features",
-        "description": "Solution detailing all installed applications on the current node.",
+        "description": "Solution detailing all things needed to begin building extensions for Windows Admin Center.",
         "connectionsListHeader": "Connections",
         "overviewName": "Getting Started",
         "overviewDescription": "A brief intro into the new dev tools",
@@ -90,7 +90,7 @@
       "locale": "en-US",
       "strings": {
         "displayName": "Apps and Features",
-        "description": "Solution detailing all installed applications on the current node.",
+        "description": "Solution detailing all things needed to begin building extensions for Project Honolulu.",
         "connectionsListHeader": "Connections",
         "overviewName": "Getting Started",
         "overviewDescription": "A brief intro into the new dev tools",

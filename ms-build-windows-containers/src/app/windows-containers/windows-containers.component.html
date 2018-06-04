@@ -6,7 +6,7 @@
   </sme-action-bar>
 </div>
 <div class="sme-layout-relative sme-position-flex-auto">
-  <sme-data-table #simpleDataTable [items]="containers" [(selection)]="selectedData1" class="sme-layout-absolute sme-position-inset-none"
+  <sme-data-table #simpleDataTable [items]="containers" [(selection)]="selectedData1" class="sme-layout-absolute sme-position-inset-none sme-dropdown-interaction-enabled"
     [defaultSortColumn]="customSortColumn" [defaultSortMode]="1" style="height: 300px;" >
     <sme-data-table-column field="image" header="Image Name" sortable="true"></sme-data-table-column>
     <sme-data-table-column field="containerId" header="Container ID" sortable="true"></sme-data-table-column>

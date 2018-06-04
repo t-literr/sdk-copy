@@ -39,7 +39,6 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        console.log("ngonInit component")
         this.psSession = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName);
         this.getApps();
 
@@ -51,9 +50,6 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         // cleanup any calls here.
     }
 
-    public removeApp(): void {
-        console.log("GET IT OUTTA HERE!")
-    }
 
     /**
      * Resets the form controls data model to a predefined initial state
@@ -61,17 +57,18 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     public createModel() {
         return {
             name: {
-                label: 'Name',
-                value: ''
+                label: 'App Package Name',
+                value: '',
+                error: 'Sorry that is not a valid package name.',
+                valid: false
             }
         };
     }
 
-        /*
-    //  The Get Services call on the "hello service" initiates a PowerShell session executes
+    /*
+    //  Initiates powershell script to retrieve list of all currently installed applications
     */
    private getApps() {
-        console.log("Components Class")
         this.appSubscription = this.appsService.getService(this.psSession, 'winrm').subscribe(
             (result: any) => {
                 this.loading = false;
@@ -87,5 +84,37 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
             }
         );
 
+    }
+
+    public removeApp(): void {
+        console.log("GET IT OUTTA HERE!")
+    }
+
+    public addApp(): void {
+        console.log("OH YEAH NOW WE'RE COOKIN'")
+        console.log(this.model.value)
+    }
+
+    /**
+     * This is only one of many ways to add validation to a form field.
+     * @param name the field name
+     * @param event the validation event
+     */
+    public onCustomValidate(name: string, event: CheckValidationEventArgs) {
+        let alerts: ValidationAlerts = {};
+        if (name === 'addApp') {
+            if (event.formControl.value.length <= 0) {
+                alerts['notValid'] = {
+                    valid: false,
+                    message: this.model.name.error,
+                    severity: ValidationAlertSeverity.Error
+                };
+            } else {
+                console.log("good to go!")
+                this.model.name.valid = true
+            }
+        }
+
+        MsftSme.deepAssign(event.alerts, alerts);
     }
 }

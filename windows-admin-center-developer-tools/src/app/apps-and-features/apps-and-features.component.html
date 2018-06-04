@@ -25,11 +25,12 @@
         </sme-master-view>
 </div>
 
-<div class="sme-layout-relative sme-documentation">
+<div class="sme-layout-relative">
     <div class="sme-documentation-example">
         <form>
-            <sme-form-field type="text" name="appPackageName" [(ngModel)]="model.name.value" [label]="model.name.label" [required]="true"></sme-form-field>
+            <sme-form-field type="text" name="addApp" [(ngModel)]="model.name.value" [label]="model.name.label" [required]="true" (customValidate)="onCustomValidate('addApp', $event)"></sme-form-field>
         </form>
+        <button (click)="addApp()" [disabled]="model.name.valid != true">Add App</button>
     </div>
 </div>
 </div>
