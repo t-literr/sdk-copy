@@ -4,15 +4,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     ActionsModule,
     AlertBarModule,
-    DetailsModule,
     DataTableModule,
+    DetailsModule,
     LoadingWheelModule,
     MasterViewModule,
+    SmeFormsModule,
     SmeStylesModule,
     SplitViewModule,
     SvgModule,
-    ToolHeaderModule,
-    SmeFormsModule
+    ToolHeaderModule
 } from '@microsoft/windows-admin-center-sdk/angular';
 import { AppsAndFeaturesComponent } from './apps-and-features.component';
 import { AppsAndFeaturesRouting } from './apps-and-features.routing';

@@ -9,4 +9,3 @@ export class AppData {
     public displayName: string;
     public publisher: string;
 }
-

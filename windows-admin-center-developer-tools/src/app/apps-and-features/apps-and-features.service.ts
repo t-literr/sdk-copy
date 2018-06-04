@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Injectable } from '@angular/core';
-import { AppContextService} from '@microsoft/windows-admin-center-sdk/angular';
+import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular';
 import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
 import { Observable } from 'rxjs';
 import { PowerShellScripts } from '../../generated/powerShell-scripts';
@@ -20,8 +20,8 @@ export class AppsAndFeaturesService {
     /**
      *  This method illustrates how to execute a PowerShell script within the context of SME / Honolulu.
      */
-    public getService(session: PowerShellSession, serviceName: string): Observable<any[]> {
-        let command = PowerShell.createScript(PowerShellScripts.Get_Service, { name: serviceName });
+    public getApps(session: PowerShellSession): Observable<any[]> {
+        let command = PowerShell.createScript(PowerShellScripts.Get_Service);
         return this.appContextService.powerShell.run(session, command)
             .map(response => {
                 const result: AppData[] = [];
@@ -37,6 +37,19 @@ export class AppsAndFeaturesService {
                     }
                 }
                 return result;
+            });
+    }
+
+    public removeApp(session: PowerShellSession, productID: string): string {
+        console.log('Service class')
+        let command = PowerShell.createScript(PowerShellScripts.Get_Process, { prodID: productID });
+        return this.appContextService.powerShell.run(session, command)
+            .map(response => {
+                console.log('before response check')
+                if (response) {
+                    console.log('removed app output')
+                    console.log(response)
+                }
             });
     }
 }

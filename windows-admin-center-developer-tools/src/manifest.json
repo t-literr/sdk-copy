@@ -74,7 +74,7 @@
     {
       "locale": "default",
       "strings": {
-        "displayName": "Apps and Features",
+        "displayName": "Introduction",
         "description": "Solution detailing all things needed to begin building extensions for Windows Admin Center.",
         "connectionsListHeader": "Connections",
         "overviewName": "Getting Started",
@@ -89,7 +89,7 @@
     {
       "locale": "en-US",
       "strings": {
-        "displayName": "Apps and Features",
+        "displayName": "Introduction",
         "description": "Solution detailing all things needed to begin building extensions for Project Honolulu.",
         "connectionsListHeader": "Connections",
         "overviewName": "Getting Started",

@@ -3,15 +3,17 @@
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AppContextService, CheckValidationEventArgs, ValidationAlerts, ValidationAlertSeverity } from '@microsoft/windows-admin-center-sdk/angular';
+import { AppContextService, CheckValidationEventArgs,
+    ValidationAlerts, ValidationAlertSeverity
+} from '@microsoft/windows-admin-center-sdk/angular';
 import { Logging, LogLevel } from '@microsoft/windows-admin-center-sdk/core';
+import { Net, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
 import { AjaxError } from 'rxjs/observable/dom/AjaxObservable';
 import { Subscription } from 'rxjs/Subscription';
 import { PowerShellScripts } from '../../generated/powerShell-scripts';
 import { Strings } from '../../generated/strings';
-import { AppsAndFeaturesService } from './apps-and-features.service';
-import { Net, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
 import { AppData } from './apps-and-features-data';
+import { AppsAndFeaturesService } from './apps-and-features.service';
 
 @Component({
     selector: 'sme-apps-and-features',
@@ -24,7 +26,8 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
 
     // needed for ps function
     private appSubscription: Subscription;
-    private psSession: PowerShellSession;
+    private psSessionGet: PowerShellSession;
+    private psSessionRemove: PowerShellSession;
     public apps: AppData[];
     public appName: string;
     public appPublisher: any;
@@ -39,7 +42,8 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.psSession = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName);
+        this.psSessionGet = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName);
+        this.psSessionRemove = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName);
         this.getApps();
 
         // set up any initialization logic here.
@@ -49,7 +53,6 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     public ngOnDestroy() {
         // cleanup any calls here.
     }
-
 
     /**
      * Resets the form controls data model to a predefined initial state
@@ -68,8 +71,8 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     /*
     //  Initiates powershell script to retrieve list of all currently installed applications
     */
-   private getApps() {
-        this.appSubscription = this.appsService.getService(this.psSession, 'winrm').subscribe(
+    private getApps() {
+        this.appSubscription = this.appsService.getApps(this.psSessionGet).subscribe(
             (result: any) => {
                 this.loading = false;
                 if (result) {
@@ -87,7 +90,8 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     }
 
     public removeApp(): void {
-        console.log("GET IT OUTTA HERE!")
+        console.log('GET IT OUTTA HERE!')
+        this.appsService.removeApp(this.psSessionRemove, 'FFBFBD1F-B160-A119-7C43-8584FA2E5665')
     }
 
     public addApp(): void {
@@ -103,15 +107,17 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     public onCustomValidate(name: string, event: CheckValidationEventArgs) {
         let alerts: ValidationAlerts = {};
         if (name === 'addApp') {
-            if (event.formControl.value.length <= 0) {
+            if (event.formControl.value != null && event.formControl.value.length <= 0) {
                 alerts['notValid'] = {
                     valid: false,
                     message: this.model.name.error,
                     severity: ValidationAlertSeverity.Error
                 };
+                this.model.name.valid = false
             } else {
-                console.log("good to go!")
+                console.log('good to go!')
                 this.model.name.valid = true
+                this.model.value = event.formControl.value
             }
         }
 
