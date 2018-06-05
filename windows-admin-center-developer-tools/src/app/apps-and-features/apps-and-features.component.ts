@@ -28,8 +28,7 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     private appSubscription: Subscription;
     private psSession: PowerShellSession;
     public apps: AppData[];
-    public appName: string;
-    public appPublisher: any;
+    public attributes: string[];
 
     public selection = null;
 
@@ -40,6 +39,7 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         private appsService: AppsAndFeaturesService) {
         this.strings = MsftSme.resourcesStrings<Strings>();
         this.model = this.createModel();
+        this.attributes = ['Name:', 'Publisher:', 'Version:'];
     }
 
     public ngOnInit(): void {
@@ -78,8 +78,6 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
                 this.loading = false;
                 if (result) {
                     this.apps = result
-                } else {
-                    this.appName = this.strings.HelloWorld.notFound;
                 }
             },
             (error: AjaxError) => {
@@ -97,8 +95,6 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
                 this.loading = false;
                 if (result) {
                     this.apps = result
-                } else {
-                    this.appName = this.strings.HelloWorld.notFound;
                 }
             },
             (error: AjaxError) => {

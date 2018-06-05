@@ -4,8 +4,14 @@
  <sme-split-view class="sme-layout-absolute sme-position-inset-none" #sv>
     <sme-split-view-pane>
         <sme-details title="My Details Title" [(isExpanded)]="sv.isExpanded">
-            <div>this is the content</div>
-            <label>{{selection.displayName}}</label>
+            <div *ngIf="selection">
+                <div role="tabpanel" class="details-panel relative">
+                    <label>Name: {{selection.displayName}}</label>
+                    <label>Publisher: {{selection.publisher}}</label>
+                    <label>Version: {{selection.version}}</label>
+                </div>
+            </div>
+            <label *ngIf="selection">{{selection.publisher}}</label>
         </sme-details>
     </sme-split-view-pane>
 
@@ -15,7 +21,7 @@
             <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
             <sme-action-bar #actionBar>
                 <sme-action-button #action [text]="'+ Add App'" (execute)="masterView.searchable = !masterView.searchable"></sme-action-button>
-                <sme-action-button #action [text]="'Toggle Header'" (execute)="masterView.header = masterView.header ? '' : 'Header' "></sme-action-button>
+                <sme-action-button #action [text]="'Remove App'" (click)="removeApp()"></sme-action-button>
             </sme-action-bar>
 
             <div class="sme-master-view-custom-filter sme-arrange-stack-h sme-layout-action-bar-item">
@@ -29,7 +35,7 @@
 
             <input #search type="search" pInputText autofocus>
 
-            <sme-data-table #smeDataTable [items]="apps" [(selection)]="selection" [globalFilter]="search">
+            <sme-data-table #smeDataTable [items]="apps" [(selection)]="selection" [globalFilter]="search" (onClick)="enabled = true">
                 <sme-data-table-column field="displayName" header="Name" sortable="true">
                 </sme-data-table-column>
                 <sme-data-table-column field="publisher" header="Publisher" sortable="true" [searchable]="false">

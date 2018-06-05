@@ -10,4 +10,5 @@ export class AppData {
     public displayName: string;
     public publisher: string;
     public prodID: string;
+    public version: string;
 }

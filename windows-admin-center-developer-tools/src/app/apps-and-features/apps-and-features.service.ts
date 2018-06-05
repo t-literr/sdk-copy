@@ -28,10 +28,13 @@ export class AppsAndFeaturesService {
                 if (response) {
                     for (const item of response.results) {
                         if (item) {
+                            console.log(item)
+
                             const data: AppData = {
                                 displayName: item.displayName,
                                 publisher: item.publisher,
-                                prodID: item.publisher
+                                prodID: item.prodID,
+                                version: item.version
                             };
                             result.push(data);
                         }
