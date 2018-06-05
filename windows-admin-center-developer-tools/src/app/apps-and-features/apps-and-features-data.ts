@@ -11,4 +11,5 @@ export class AppData {
     public publisher: string;
     public prodID: string;
     public version: string;
+    public fullItem: Object;
 }

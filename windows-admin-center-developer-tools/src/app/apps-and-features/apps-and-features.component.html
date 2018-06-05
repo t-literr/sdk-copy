@@ -11,7 +11,6 @@
                     <label>Version: {{selection.version}}</label>
                 </div>
             </div>
-            <label *ngIf="selection">{{selection.publisher}}</label>
         </sme-details>
     </sme-split-view-pane>
 
@@ -21,7 +20,7 @@
             <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
             <sme-action-bar #actionBar>
                 <sme-action-button #action [text]="'+ Add App'" (execute)="masterView.searchable = !masterView.searchable"></sme-action-button>
-                <sme-action-button #action [text]="'Remove App'" (click)="removeApp()"></sme-action-button>
+                <sme-action-button #action [text]="'Remove App'" (execute)="removeApp(selection.prodID, selection.fullItem)"></sme-action-button>
             </sme-action-bar>
 
             <div class="sme-master-view-custom-filter sme-arrange-stack-h sme-layout-action-bar-item">

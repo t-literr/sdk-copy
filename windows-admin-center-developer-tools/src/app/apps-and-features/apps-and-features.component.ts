@@ -28,9 +28,8 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     private appSubscription: Subscription;
     private psSession: PowerShellSession;
     public apps: AppData[];
-    public attributes: string[];
 
-    public selection = null;
+    public selection: AppData;
 
     // needed for form to add new package
     public model: any;
@@ -39,19 +38,14 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         private appsService: AppsAndFeaturesService) {
         this.strings = MsftSme.resourcesStrings<Strings>();
         this.model = this.createModel();
-        this.attributes = ['Name:', 'Publisher:', 'Version:'];
+        this.selection = null;
     }
 
     public ngOnInit(): void {
         this.psSession = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName);
         this.getApps();
-
-        // set up any initialization logic here.
-
-        // this.appContextService.
     }
     public ngOnDestroy() {
-        // cleanup any calls here.
         this.psSession.dispose()
     }
 
@@ -87,10 +81,10 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         );
     }
 
-    public removeApp(index: number): void {
-        console.log('GET IT OUTTA HERE!')
-        console.log(index)
-        this.appSubscription = this.appsService.removeApp(this.psSession, 'DA433FCF-90A1-19A5-65A7-FDF82DE4826D').subscribe(
+    public removeApp(prodID: number, fullItem: Object): void {
+        console.log(prodID)
+        console.log(fullItem)
+        this.appSubscription = this.appsService.removeApp(this.psSession, prodID).subscribe(
             (result: any) => {
                 this.loading = false;
                 if (result) {
