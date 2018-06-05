@@ -26,8 +26,7 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
 
     // needed for ps function
     private appSubscription: Subscription;
-    private psSessionGet: PowerShellSession;
-    private psSessionRemove: PowerShellSession;
+    private psSession: PowerShellSession;
     public apps: AppData[];
     public appName: string;
     public appPublisher: any;
@@ -42,8 +41,7 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.psSessionGet = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName);
-        this.psSessionRemove = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName);
+        this.psSession = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName);
         this.getApps();
 
         // set up any initialization logic here.
@@ -52,6 +50,7 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     }
     public ngOnDestroy() {
         // cleanup any calls here.
+        this.psSession.dispose()
     }
 
     /**
@@ -72,7 +71,7 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     //  Initiates powershell script to retrieve list of all currently installed applications
     */
     private getApps() {
-        this.appSubscription = this.appsService.getApps(this.psSessionGet).subscribe(
+        this.appSubscription = this.appsService.getApps(this.psSession).subscribe(
             (result: any) => {
                 this.loading = false;
                 if (result) {
@@ -86,12 +85,25 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
                 this.loading = false;
             }
         );
-
     }
 
-    public removeApp(): void {
+    public removeApp(index: number): void {
         console.log('GET IT OUTTA HERE!')
-        this.appsService.removeApp(this.psSessionRemove, 'FFBFBD1F-B160-A119-7C43-8584FA2E5665')
+        console.log(index)
+        this.appSubscription = this.appsService.removeApp(this.psSession, 'DA433FCF-90A1-19A5-65A7-FDF82DE4826D').subscribe(
+            (result: any) => {
+                this.loading = false;
+                if (result) {
+                    this.apps = result
+                } else {
+                    this.appName = this.strings.HelloWorld.notFound;
+                }
+            },
+            (error: AjaxError) => {
+                this.errorMessage = Net.getErrorMessage(error);
+                this.loading = false;
+            }
+        );
     }
 
     public addApp(): void {

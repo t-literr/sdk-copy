@@ -40,7 +40,7 @@ export class AppsAndFeaturesService {
             });
     }
 
-    public removeApp(session: PowerShellSession, productID: string): string {
+    public removeApp(session: PowerShellSession, productID: string): Observable<any[]> {
         console.log('Service class')
         let command = PowerShell.createScript(PowerShellScripts.Get_Process, { prodID: productID });
         return this.appContextService.powerShell.run(session, command)

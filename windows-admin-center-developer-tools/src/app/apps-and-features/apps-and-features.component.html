@@ -15,7 +15,7 @@
                     <sme-data-table-column field="publisher" header="Publisher" sortable="true"></sme-data-table-column>
                     <sme-data-table-column header="Remove" sortable="false">
                         <ng-template>
-                            <button (click)="removeApp()">Remove App</button>
+                            <button (click)="removeApp($index)">Remove App</button>
                         </ng-template>
                     </sme-data-table-column>
                   </sme-data-table>

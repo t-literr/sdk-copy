@@ -1,7 +1,7 @@
 Param([string]$prodID)
 $app = Get-WmiObject -Class Win32_Product | Where-Object {
-  $_.IdentifyingNumber -match $prodID
+  $_.IdentifyingNumber -match ($prodID)
 }
-return $prodID
+return $app
 
 #$app.Uninstall()
