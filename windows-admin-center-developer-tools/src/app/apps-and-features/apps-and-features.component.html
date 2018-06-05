@@ -1,37 +1,70 @@
-<!DOCTYPE HTML>
-<div class="stretch-absolute flex-layout sme-position-inset-none vertical">
-<div class="auto-flex-size relative">
-    <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
-      <sme-master-view>
-          <div class="stretch-absolute flex-layout vertical">
-              <sme-tool-header>Apps and Features</sme-tool-header>
-              <div class="overflow-margins table-indent">
-                This component provides a list of all currently installed apps and features on the current node.
-              </div>
-              <div class="sme-layout-relative sme-position-flex-auto">
-                <div class="sme-layout-relative sme-position-flex-auto">
-                  <sme-data-table #smeDataTable [items]="apps" style="height: 300px;" class="sme-layout-absolute sme-position-inset-none" [defaultSortColumn]="customSortColumn" [defaultSortMode]="1">
-                    <sme-data-table-column field="displayName" header="Name" sortable="true" width="50%"></sme-data-table-column>
-                    <sme-data-table-column field="publisher" header="Publisher" sortable="true"></sme-data-table-column>
-                    <sme-data-table-column header="Remove" sortable="false">
-                        <ng-template>
-                            <button (click)="removeApp($index)">Remove App</button>
-                        </ng-template>
-                    </sme-data-table-column>
-                  </sme-data-table>
-                </div>
+<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+ Licensed under the MIT License. -->
+
+ <sme-split-view class="sme-layout-absolute sme-position-inset-none" #sv>
+    <sme-split-view-pane>
+        <sme-details title="My Details Title" [(isExpanded)]="sv.isExpanded">
+            <div>this is the content</div>
+            <div>this is the content</div>
+            <div>this is the content</div>
+            <div>this is the content</div>
+            <div>this is the content</div>
+            <div>this is the content</div>
+            <div>this is the content</div>
+            <div>this is the content</div>
+            <div>this is the content</div>
+            <div>this is the content</div>
+        </sme-details>
+    </sme-split-view-pane>
+
+    <sme-split-view-content>
+        <sme-master-view #masterView header="Master View Example" [showCustomFilter]="true" [total]="smeDataTable.renderedItems.length" [selection]="selection" [filterActive]="active" (clearSelection)="selection = null" (refresh)="alert('refreshed')" (filter)="active = !active; alert('filter active: ' + active)"
+            (clearSelection)="selection=null">
+            <sme-action-bar #actionBar>
+                <sme-action-button #action [text]="'Toggle Search'" (execute)="masterView.searchable = !masterView.searchable"></sme-action-button>
+                <sme-action-button #action [text]="'Toggle Header'" (execute)="masterView.header = masterView.header ? '' : 'Header' "></sme-action-button>
+            </sme-action-bar>
+
+            <div class="sme-master-view-custom-filter sme-arrange-stack-h sme-layout-action-bar-item">
+                <span class="sme-scheme-secondary-text sme-arrange-ws-nowrap" for="groupBy"> Group by:</span>
+                <div class="sme-select">
+                    <select id="groupBy" required [(ngModel)]="groupField" name="groupBy" #groupBy="ngModel" (ngModelChange)="onDropdownChange($event)">
+                      <option *ngFor="let option of groupByOptions" [value]="option.field">{{option.displayName}}</option>
+                    </select>
                 </div>
             </div>
+            <!--
+
+:host >>> .extra-filter-container .combobox {
+    width: unset;
+}
+
+:host >>> .extra-filter-container select {
+    color: #2D3239;
+    border-color: #B3B3B3;
+    font-size: 14px;
+}
+
+:host >>> .extra-filter-container .extra-filter-label {
+    color: #686868;
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    margin-right: 6px;
+    margin-left: 12px;
+    max-width: 150px;
+} */
+             -->
+
+
+            <input #search type="search" pInputText autofocus>
+
+            <sme-data-table #smeDataTable [items]="items" [(selection)]="selection" [globalFilter]="search">
+                <sme-data-table-column field="name" header="Name" sortable="true">
+                </sme-data-table-column>
+                <sme-data-table-column field="displayName" header="Display Name" sortable="true" [searchable]="false">
+                </sme-data-table-column>
+            </sme-data-table>
         </sme-master-view>
-</div>
-
-<div class="sme-layout-relative">
-    <div class="sme-documentation-example">
-        <form>
-            <sme-form-field type="text" name="addApp" [(ngModel)]="model.name.value" [label]="model.name.label" [required]="true" (customValidate)="onCustomValidate('addApp', $event)"></sme-form-field>
-        </form>
-        <button (click)="addApp()" [disabled]="model.name.valid != true">Add App</button>
-    </div>
-</div>
-</div>
-
+    </sme-split-view-content>
+</sme-split-view>

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+
+
+<div class="stretch-absolute flex-layout sme-position-inset-none vertical">
+<div class="auto-flex-size relative">
+    <sme-tool-header>Apps and Features</sme-tool-header>
+    <div class="overflow-margins table-indent">
+      This component provides a list of all currently installed apps and features on the current node.
+    </div>
+    <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
+      <sme-master-view>
+          <div class="stretch-absolute flex-layout vertical">
+              <div class="sme-layout-relative sme-position-flex-auto">
+                <div class="sme-layout-relative sme-position-flex-auto">
+                  <sme-data-table #smeDataTable [items]="apps" style="height: 300px;" class="sme-layout-absolute sme-position-inset-none" [defaultSortColumn]="customSortColumn" [defaultSortMode]="1">
+                    <sme-data-table-column field="displayName" header="Name" sortable="true" width="50%"></sme-data-table-column>
+                    <sme-data-table-column field="publisher" header="Publisher" sortable="true"></sme-data-table-column>
+                    <sme-data-table-column header="Remove" sortable="false">
+                        <ng-template>
+                            <button (click)="removeApp($index)">Remove App</button>
+                        </ng-template>
+                    </sme-data-table-column>
+                  </sme-data-table>
+                </div>
+                </div>
+            </div>
+        </sme-master-view>
+</div>
+
+<div class="sme-layout-relative sme-position-flex-auto vertical">
+    <br/>
+    <ul class="nav nav-tabs" role="tablist" role="presentation">
+        <li [class.active]="tabIndex===1">
+            <a (click)="clickTab(1)">Simple Scenario</a>
+        </li>
+        <li [class.active]="tabIndex===2">
+            <a (click)="clickTab(2)">Multiple Selection</a>
+        </li>
+        <li [class.active]="tabIndex===3">
+            <a (click)="clickTab(3)">Lazy Loading</a>
+        </li>
+        <li [class.active]="tabIndex===4">
+            <a (click)="clickTab(4)">Data Streaming</a>
+        </li>
+        <li [class.active]="tabIndex===5">
+            <a (click)="clickTab(5)">Grouping</a>
+        </li>
+    </ul>
+  </div>
+
+<div class="sme-layout-relative">
+    <div class="sme-documentation-example">
+        <form>
+            <sme-form-field type="text" name="addApp" [(ngModel)]="model.name.value" [label]="model.name.label" [required]="true" (customValidate)="onCustomValidate('addApp', $event)"></sme-form-field>
+        </form>
+        <button (click)="addApp()" [disabled]="model.name.valid != true">Add App</button>
+    </div>
+</div>
+</div>
+
