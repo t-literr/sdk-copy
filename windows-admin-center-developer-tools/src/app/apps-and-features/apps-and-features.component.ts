@@ -81,9 +81,10 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         );
     }
 
-    public removeApp(prodID: number, fullItem: Object): void {
+    public removeApp(prodID: string, fullItem: Object): void {
         console.log(prodID)
         console.log(fullItem)
+        this.loading = true;
         this.appSubscription = this.appsService.removeApp(this.psSession, prodID).subscribe(
             (result: any) => {
                 this.loading = false;
