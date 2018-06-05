@@ -31,6 +31,8 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     public appName: string;
     public appPublisher: any;
 
+    public selection = null;
+
     // needed for form to add new package
     public model: any;
 

@@ -30,7 +30,8 @@ export class AppsAndFeaturesService {
                         if (item) {
                             const data: AppData = {
                                 displayName: item.displayName,
-                                publisher: item.publisher
+                                publisher: item.publisher,
+                                prodID: item.publisher
                             };
                             result.push(data);
                         }
