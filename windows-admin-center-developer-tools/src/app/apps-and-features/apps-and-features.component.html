@@ -3,22 +3,12 @@
 
  <sme-split-view class="sme-layout-absolute sme-position-inset-none" #sv>
     <sme-split-view-content>
-        <sme-master-view #masterView header="Apps and Features" [showCustomFilter]="true" [total]="smeDataTable.renderedItems.length" [selection]="selection" [filterActive]="active" (clearSelection)="selection = null" (refresh)="alert('refreshed')" (filter)="active = !active; alert('filter active: ' + active)"
-            (clearSelection)="selection=null">
+        <sme-master-view #masterView header="Apps and Features" [total]="smeDataTable.renderedItems.length" [showSelection]="false"  [showFilter]="false" (refresh)="alert('refreshed')">
             <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
             <sme-action-bar #actionBar>
-                <sme-action-button #action [text]="'Add App'" [iconClass]="'sme-icon icon-win-add'" (execute)="masterView.searchable = !masterView.searchable"></sme-action-button>
-                <sme-action-button #action [text]="'Remove App'" [iconClass]="'sme-icon icon-win-delete'" (execute)="removeApp(selection.prodID, selection.fullItem)"></sme-action-button>
+                <sme-action-button #action [text]="'Add New'" [iconClass]="'sme-icon icon-win-add'" (execute)="masterView.searchable = !masterView.searchable"></sme-action-button>
+                <sme-action-button #action [text]="'Remove Selected'" [iconClass]="'sme-icon icon-win-delete'" (execute)="removeApp(selection.prodID, selection.fullItem)"></sme-action-button>
             </sme-action-bar>
-
-            <!-- <div class="sme-master-view-custom-filter sme-arrange-stack-h sme-layout-action-bar-item">
-                <span class="sme-scheme-secondary-text sme-arrange-ws-nowrap" for="groupBy"> Group by:</span>
-                <div class="sme-select">
-                    <select id="groupBy" required [(ngModel)]="groupField" name="groupBy" #groupBy="ngModel" (ngModelChange)="onDropdownChange($event)">
-                      <option *ngFor="let option of groupByOptions" [value]="option.field">{{option.displayName}}</option>
-                    </select>
-                </div>
-            </div> -->
 
             <input #search type="search" pInputText autofocus>
 
@@ -33,14 +23,31 @@
 
     <sme-split-view-pane>
         <sme-details [title]="strings.detailsTitle.format(selection ? selection.displayName : '')" [(isExpanded)]="sv.isExpanded">
+            <div class="sme-layout-absolute sme-position-inset-none sme-arrange-stack-h">
             <div *ngIf="selection">
-                <div role="tabpanel" class="details-panel relative">
-                    <label *ngIf="selection.displayName">Name: {{selection.displayName}}</label>
-                    <label *ngIf="selection.publisher">Publisher: {{selection.publisher}}</label>
-                    <label *ngIf="selection.version">Version: {{selection.version}}</label>
+                <div role="tabpanel" class="details-panel sme-margin-left-lg sme-layout-relative horizontal">
+
+                    <div>
+                    <label *ngIf="selection.displayName">{{strings.listItem.format("Name")}}</label>
+                    <div>{{selection.displayName}}</div>
+                    </div>
+
+                    <div>
+
+                    <label *ngIf="selection.displayName">{{strings.listItem.format("Publisher")}}</label>
+                    <div>{{selection.publisher}}</div>
+                  </div>
+
+                  <div>
+
+                    <label *ngIf="selection.displayName">{{strings.listItem.format("Version")}}</label>
+                    <div>{{selection.version}}</div>
+                  </div>
+
                 </div>
             </div>
-            <div *ngIf="!selection" class="fixed-flex-size">Select an app to learn more.</div>
+            <div *ngIf="!selection" class="fixed-flex-size sme-margin-left-lg">Select an app to learn more.</div>
+            </div>
         </sme-details>
     </sme-split-view-pane>
 
