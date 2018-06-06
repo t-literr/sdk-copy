@@ -3,12 +3,14 @@
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AppContextService, CheckValidationEventArgs,
-    ValidationAlerts, ValidationAlertSeverity
+import { AppContextService, CheckValidationEventArgs, ConfirmationDialogResult,
+    DialogService, ValidationAlerts, ValidationAlertSeverity
 } from '@microsoft/windows-admin-center-sdk/angular';
-import { Logging, LogLevel } from '@microsoft/windows-admin-center-sdk/core';
+import { Logging, LogLevel, NotificationState } from '@microsoft/windows-admin-center-sdk/core';
 import { Net, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
+import { Observable } from 'rxjs';
 import { AjaxError } from 'rxjs/observable/dom/AjaxObservable';
+import { IfObservable } from 'rxjs/observable/IfObservable';
 import { Subscription } from 'rxjs/Subscription';
 import { PowerShellScripts } from '../../generated/powerShell-scripts';
 import { Strings } from '../../generated/strings';
@@ -63,6 +65,11 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         };
     }
 
+    // reload page in the event an app is removed
+    private refresh() {
+        this.getApps();
+    }
+
     /*
     //  Initiates powershell script to retrieve list of all currently installed applications
     */
@@ -82,19 +89,44 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     }
 
     public removeApp(prodID: string, fullItem: Object): void {
-        console.log(prodID)
-        console.log(fullItem)
-        this.loading = true;
-        this.appSubscription = this.appsService.removeApp(this.psSession, prodID).subscribe(
-            (result: any) => {
-                this.loading = false;
-                if (result) {
-                    this.apps = result
+        this.appContextService.frame.showDialogConfirmation({
+            confirmButtonText: this.strings.disable,
+            cancelButtonText: this.strings.cancel,
+            title: this.strings.removeApp,
+            message: this.strings.areYouSureRemove.format(this.selection.displayName)
+        }).switchMap((result: ConfirmationDialogResult) => {
+            if (result.confirmed) {
+                this.appSubscription = this.appsService.removeApp(this.psSession, prodID).subscribe(
+                    (resultApps: any) => {
+                        this.loading = false;
+                        if (resultApps) {
+                            this.apps = resultApps
+                        }
+                    },
+                    (error: AjaxError) => {
+                        this.errorMessage = Net.getErrorMessage(error);
+                        this.loading = false;
+                    }
+                );
+            }
+            return Observable.empty();
+        })
+        .subscribe(
+            (removeResult) => {
+                if (removeResult['returnValue'] === 0) {
+                    // TODO
+                } else {
+                    // TODO
+                    this.refresh();
                 }
             },
-            (error: AjaxError) => {
-                this.errorMessage = Net.getErrorMessage(error);
+            error => {
+                this.appContextService.notification.alert(
+                    this.appContextService.activeConnection.nodeName,
+                    NotificationState.Error,
+                    Net.getErrorMessage(error));
                 this.loading = false;
+                this.refresh();
             }
         );
     }
