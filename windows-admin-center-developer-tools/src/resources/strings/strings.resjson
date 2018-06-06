@@ -41,5 +41,8 @@
 
     "//": "about",
     "HelloWorld_about": "About",
-    "HelloWorld_aboutDescription": "About view is lazy loaded when requested."
+    "HelloWorld_aboutDescription": "About view is lazy loaded when requested.",
+
+    "//": "apps&features",
+    "detailsTitle": "{0} Properties"
 }
