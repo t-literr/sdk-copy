@@ -46,7 +46,7 @@
     "//": "apps&features",
     "detailsTitle": "{0} Properties",
     "listItem": "{0}: ",
-    "disable": "Disbale",
+    "disable": "Disable",
     "cancel": "Cancel",
     "removeApp": "Remove app",
     "areYouSureRemove": "Are you sure you want to remove '{0}'?"
