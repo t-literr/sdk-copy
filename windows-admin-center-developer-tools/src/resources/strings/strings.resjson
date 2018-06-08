@@ -49,5 +49,9 @@
     "yes": "Yes",
     "cancel": "Cancel",
     "removeApp": "Remove app",
-    "areYouSureRemove": "Are you sure you want to remove '{0}'?"
+    "areYouSureRemove": "Are you sure you want to remove '{0}'?",
+    "remove_title": "Remove '{0}'",
+    "remove_description": "Removing '{0}'",
+    "remove_success": "Application '{0}' successfully removed",
+    "remove_error": "Failed to remove application '{0}'"
 }

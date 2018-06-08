@@ -17,6 +17,7 @@ import { ClientNotification,
         Net,
         NotificationState,
         PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
+import { start } from 'repl';
 import { Observable } from 'rxjs';
 import { AjaxError } from 'rxjs/observable/dom/AjaxObservable';
 import { IfObservable } from 'rxjs/observable/IfObservable';
@@ -25,12 +26,13 @@ import { PowerShellScripts } from '../../generated/powerShell-scripts';
 import { Strings } from '../../generated/strings';
 import { AppData } from './apps-and-features-data';
 import { AppsAndFeaturesService } from './apps-and-features.service';
+import { AppNotifications } from './apps-notifications';
 
 @Component({
     selector: 'sme-apps-and-features',
     templateUrl: './apps-and-features.component.html'
 })
-export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
+export class AppsAndFeaturesComponent extends AppNotifications implements OnInit, OnDestroy {
     public loading = true;
     public errorMessage: string;
     public strings = MsftSme.resourcesStrings<Strings>();
@@ -47,6 +49,7 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
 
     constructor(private appContextService: AppContextService,
         private appsService: AppsAndFeaturesService) {
+        super(appContextService, appsService)
         this.strings = MsftSme.resourcesStrings<Strings>();
         this.model = this.createModel();
         this.selection = null;
@@ -102,6 +105,18 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     //  Uninstall the selected application
     */
     public removeApp(prodID: string, fullItem: Object): void {
+        console.log('setting up notifications')
+        // issue notifications while remove is processing
+        let removeStrings = this.strings.remove;
+        let notifSettings = this.createClientNotification(removeStrings.title,
+                                                          removeStrings.description,
+                                                          removeStrings.description);
+        let notif = this.appContextService.notification.notify(
+            this.appContextService.gateway.gatewayName, notifSettings
+        );
+        console.log('first notification issued')
+
+        // double check user really wants to remove selected application
         this.appContextService.frame.showDialogConfirmation({
             confirmButtonText: this.strings.yes,
             cancelButtonText: this.strings.cancel,
@@ -113,11 +128,22 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
                 this.appSubscription = this.appsService.removeApp(this.psSession, prodID).subscribe(
                     (resultApps: any) => {
                         this.selection = null;
+                        this.updateNotification(
+                            notif, notifSettings,
+                            removeStrings.success.format(this.selection.displayName),
+                            NotificationState.Success
+                        );
+                        console.log('updated notification to say app is removed')
                     },
                     (error: AjaxError) => {
-                        this.errorMessage = Net.getErrorMessage(error);
                         this.loading = false;
                         console.log('reached error 1')
+                        this.updateNotification(
+                            notif, notifSettings,
+                            removeStrings.error.format(this.selection.displayName, Net.getErrorMessage(error)),
+                            NotificationState.Error
+                        );
+                        console.log('notifiation of error')
                     }
                 );
             }
@@ -126,10 +152,8 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         })
         .subscribe(
             (removeResult) => {
-                if (removeResult['returnValue'] === 0) {
-                    // TODO
-                } else {
-                    // TODO
+                if (removeResult) {
+                    // todo
                 }
             },
             error => {
@@ -173,21 +197,4 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         MsftSme.deepAssign(event.alerts, alerts);
     }
 
-    /**
-     * display error alert
-     * @param error error object, if AjaxError extracts error message
-     */
-    public showErrorAlert(title: string, description: string, error: any) {
-        let message = (error as AjaxError) ? Net.getErrorMessage(error as AjaxError) : error;
-        let clientNotification: ClientNotification = {
-            type: ClientNotificationType.NotificationCenter,
-            id: MsftSme.getUniqueId(),
-            title: title,
-            description: description,
-            message: error,
-            state: NotificationState.Error
-        };
-
-        this.appContextService.notification.notify(this.appContextService.gateway.gatewayName, clientNotification);
-    }
 }
