@@ -105,16 +105,11 @@ export class AppsAndFeaturesComponent extends AppNotifications implements OnInit
     //  Uninstall the selected application
     */
     public removeApp(prodID: string, fullItem: Object): void {
-        console.log('setting up notifications')
         // issue notifications while remove is processing
         let removeStrings = this.strings.remove;
-        let notifSettings = this.createClientNotification(removeStrings.title,
-                                                          removeStrings.description,
-                                                          removeStrings.description);
-        let notif = this.appContextService.notification.notify(
-            this.appContextService.gateway.gatewayName, notifSettings
-        );
-        console.log('first notification issued')
+        let notifSettings = this.createClientNotification(removeStrings.title.format(this.selection.displayName),
+                                                          removeStrings.description.format(this.selection.displayName),
+                                                          removeStrings.description.format(this.selection.displayName));
 
         // double check user really wants to remove selected application
         this.appContextService.frame.showDialogConfirmation({
@@ -125,15 +120,19 @@ export class AppsAndFeaturesComponent extends AppNotifications implements OnInit
         }).switchMap((result: ConfirmationDialogResult) => {
             this.loading = true;
             if (result.confirmed) {
+                // ok to start notifications because process has now started
+                let notif = this.appContextService.notification.notify(
+                    this.appContextService.gateway.gatewayName, notifSettings
+                );
+
                 this.appSubscription = this.appsService.removeApp(this.psSession, prodID).subscribe(
                     (resultApps: any) => {
-                        this.selection = null;
                         this.updateNotification(
                             notif, notifSettings,
                             removeStrings.success.format(this.selection.displayName),
                             NotificationState.Success
                         );
-                        console.log('updated notification to say app is removed')
+                        this.selection = null;
                     },
                     (error: AjaxError) => {
                         this.loading = false;
@@ -143,7 +142,6 @@ export class AppsAndFeaturesComponent extends AppNotifications implements OnInit
                             removeStrings.error.format(this.selection.displayName, Net.getErrorMessage(error)),
                             NotificationState.Error
                         );
-                        console.log('notifiation of error')
                     }
                 );
             }
