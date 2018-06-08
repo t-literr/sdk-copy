@@ -3,7 +3,7 @@
 
  <sme-split-view class="sme-layout-absolute sme-position-inset-none" #sv>
     <sme-split-view-content>
-        <sme-master-view #masterView header="Apps and Features" [total]="smeDataTable.renderedItems.length" [showSelection]="false"  [showFilter]="false" (refresh)="alert('refreshed')">
+        <sme-master-view #masterView header="Apps and Features" [total]="smeDataTable.renderedItems.length" [showSelection]="false"  [showFilter]="false" (refresh)="refresh()">
             <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
             <sme-action-bar #actionBar>
                 <sme-action-button #action [text]="'Add New'" [iconClass]="'sme-icon icon-win-add'" (execute)="masterView.searchable = !masterView.searchable"></sme-action-button>
@@ -22,28 +22,22 @@
     </sme-split-view-content>
 
     <sme-split-view-pane>
-        <sme-details [title]="strings.detailsTitle.format(selection ? selection.displayName : '')" [(isExpanded)]="sv.isExpanded">
+        <sme-details [title]="strings.detailsTitle.format(selection ? selection.displayName : '')" [(isExpanded)]="sv.isExpanded && selection">
             <div class="sme-layout-absolute sme-position-inset-none sme-arrange-stack-h">
             <div *ngIf="selection">
                 <div role="tabpanel" class="details-panel sme-margin-left-lg sme-layout-relative horizontal">
-
-                    <div>
+                  <div>
                     <label *ngIf="selection.displayName">{{strings.listItem.format("Name")}}</label>
                     <div>{{selection.displayName}}</div>
-                    </div>
-
-                    <div>
-
+                  </div>
+                  <div>
                     <label *ngIf="selection.displayName">{{strings.listItem.format("Publisher")}}</label>
                     <div>{{selection.publisher}}</div>
                   </div>
-
                   <div>
-
                     <label *ngIf="selection.displayName">{{strings.listItem.format("Version")}}</label>
                     <div>{{selection.version}}</div>
                   </div>
-
                 </div>
             </div>
             <div *ngIf="!selection" class="fixed-flex-size sme-margin-left-lg">Select an app to learn more.</div>

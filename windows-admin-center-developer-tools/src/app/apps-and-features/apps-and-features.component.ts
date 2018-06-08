@@ -66,7 +66,8 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
     }
 
     // reload page in the event an app is removed
-    private refresh() {
+    public refresh() {
+        this.loading = true;
         this.getApps();
     }
 
@@ -88,27 +89,30 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         );
     }
 
+    /*
+    //  Uninstall the selected application
+    */
     public removeApp(prodID: string, fullItem: Object): void {
         this.appContextService.frame.showDialogConfirmation({
-            confirmButtonText: this.strings.disable,
+            confirmButtonText: this.strings.yes,
             cancelButtonText: this.strings.cancel,
             title: this.strings.removeApp,
             message: this.strings.areYouSureRemove.format(this.selection.displayName)
         }).switchMap((result: ConfirmationDialogResult) => {
+            this.loading = true;
             if (result.confirmed) {
                 this.appSubscription = this.appsService.removeApp(this.psSession, prodID).subscribe(
                     (resultApps: any) => {
-                        this.loading = false;
-                        if (resultApps) {
-                            this.apps = resultApps
-                        }
+                        this.selection = null;
                     },
                     (error: AjaxError) => {
                         this.errorMessage = Net.getErrorMessage(error);
                         this.loading = false;
+                        console.log('reached error 1')
                     }
                 );
             }
+            this.refresh()
             return Observable.empty();
         })
         .subscribe(
@@ -117,7 +121,6 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
                     // TODO
                 } else {
                     // TODO
-                    this.refresh();
                 }
             },
             error => {
@@ -126,7 +129,7 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
                     NotificationState.Error,
                     Net.getErrorMessage(error));
                 this.loading = false;
-                this.refresh();
+                console.log('reached error 2')
             }
         );
     }
