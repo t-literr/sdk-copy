@@ -6,7 +6,7 @@
         <sme-master-view #masterView header="Apps and Features" [total]="smeDataTable.renderedItems.length" [showSelection]="false"  [showFilter]="false" (refresh)="refresh()">
             <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
             <sme-action-bar #actionBar>
-                <sme-action-button #action [text]="'Add New'" [iconClass]="'sme-icon icon-win-add'" (execute)="masterView.searchable = !masterView.searchable"></sme-action-button>
+                <sme-action-button #action [text]="'Add New'" [iconClass]="'sme-icon icon-win-add'"></sme-action-button>
                 <sme-action-button #action [text]="'Remove Selected'" [iconClass]="'sme-icon icon-win-delete'" (execute)="removeApp(selection.prodID, selection.fullItem)"></sme-action-button>
             </sme-action-bar>
 
@@ -22,7 +22,7 @@
     </sme-split-view-content>
 
     <sme-split-view-pane>
-        <sme-details [title]="strings.detailsTitle.format(selection ? selection.displayName : '')" [(isExpanded)]="sv.isExpanded && selection">
+        <sme-details [title]="strings.detailsTitle.format(selection ? selection.displayName : '')" [(isExpanded)]="sv.isExpanded">
             <div class="sme-layout-absolute sme-position-inset-none sme-arrange-stack-h">
             <div *ngIf="selection">
                 <div role="tabpanel" class="details-panel sme-margin-left-lg sme-layout-relative horizontal">

@@ -3,11 +3,20 @@
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AppContextService, CheckValidationEventArgs, ConfirmationDialogResult,
-    DialogService, ValidationAlerts, ValidationAlertSeverity
+import { AppContextService,
+        CheckValidationEventArgs,
+        ConfirmationDialogResult,
+        DialogService,
+        ValidationAlerts,
+        ValidationAlertSeverity
 } from '@microsoft/windows-admin-center-sdk/angular';
-import { Logging, LogLevel, NotificationState } from '@microsoft/windows-admin-center-sdk/core';
-import { Net, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
+import { ClientNotification,
+        ClientNotificationType,
+        Logging,
+        LogLevel,
+        Net,
+        NotificationState,
+        PowerShellSession } from '@microsoft/windows-admin-center-sdk/core';
 import { Observable } from 'rxjs';
 import { AjaxError } from 'rxjs/observable/dom/AjaxObservable';
 import { IfObservable } from 'rxjs/observable/IfObservable';
@@ -162,5 +171,23 @@ export class AppsAndFeaturesComponent implements OnInit, OnDestroy {
         }
 
         MsftSme.deepAssign(event.alerts, alerts);
+    }
+
+    /**
+     * display error alert
+     * @param error error object, if AjaxError extracts error message
+     */
+    public showErrorAlert(title: string, description: string, error: any) {
+        let message = (error as AjaxError) ? Net.getErrorMessage(error as AjaxError) : error;
+        let clientNotification: ClientNotification = {
+            type: ClientNotificationType.NotificationCenter,
+            id: MsftSme.getUniqueId(),
+            title: title,
+            description: description,
+            message: error,
+            state: NotificationState.Error
+        };
+
+        this.appContextService.notification.notify(this.appContextService.gateway.gatewayName, clientNotification);
     }
 }
