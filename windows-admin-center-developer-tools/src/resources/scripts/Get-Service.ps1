@@ -1,1 +1,3 @@
-get-wmiobject -class Win32Reg_AddRemovePrograms
+get-wmiobject -class Win32_Product
+
+

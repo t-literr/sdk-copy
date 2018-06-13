@@ -7,15 +7,17 @@
             <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
             <sme-action-bar #actionBar>
                 <sme-action-button #action [text]="'Add New'" [iconClass]="'sme-icon icon-win-add'"></sme-action-button>
-                <sme-action-button #action [text]="'Remove Selected'" [iconClass]="'sme-icon icon-win-delete'" (execute)="removeApp(selection.prodID, selection.fullItem)"></sme-action-button>
+                <sme-action-button #action [text]="'Remove Selected'" [iconClass]="'sme-icon icon-win-delete'" (execute)="removeApp(selectedApps)"></sme-action-button>
             </sme-action-bar>
 
             <input #search type="search" pInputText autofocus>
 
-            <sme-data-table #smeDataTable [items]="apps" [(selection)]="selection" [globalFilter]="search" (onClick)="enabled = true">
+            <sme-data-table #smeDataTable [items]="apps" selectionMode="multiple" [(selection)]="selectedApps" [globalFilter]="search" (click)="singleSelect(selectedApps[selectedApps.length - 1])" [defaultSortMode]="1">
                 <sme-data-table-column field="displayName" header="Name" sortable="true">
                 </sme-data-table-column>
                 <sme-data-table-column field="publisher" header="Publisher" sortable="true" [searchable]="false">
+                </sme-data-table-column>
+                <sme-data-table-column field="installDate" header="Install Date" sortable="true" [searchable]="false">
                 </sme-data-table-column>
             </sme-data-table>
         </sme-master-view>
@@ -33,6 +35,10 @@
                   <div>
                     <label *ngIf="selection.displayName">{{strings.listItem.format("Publisher")}}</label>
                     <div>{{selection.publisher}}</div>
+                  </div>
+                  <div>
+                    <label *ngIf="selection.displayName">{{strings.listItem.format("Install Date")}}</label>
+                    <div>{{selection.installDate}}</div>
                   </div>
                   <div>
                     <label *ngIf="selection.displayName">{{strings.listItem.format("Version")}}</label>

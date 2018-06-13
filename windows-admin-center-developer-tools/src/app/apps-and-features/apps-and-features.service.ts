@@ -26,14 +26,16 @@ export class AppsAndFeaturesService {
             .map(response => {
                 const result: AppData[] = [];
                 if (response) {
+                    console.log(response)
                     for (const item of response.results) {
                         if (item) {
                             const data: AppData = {
-                                displayName: item.displayName,
-                                publisher: item.publisher,
-                                prodID: item.prodID,
+                                displayName: item.name,
+                                publisher: item.vendor,
+                                prodID: item.identifyingNumber,
                                 version: item.version,
-                                fullItem: item
+                                installDate: item.installDate,
+                                selected: false
                             };
                             result.push(data);
                         }
