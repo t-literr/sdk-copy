@@ -13,6 +13,7 @@ import { AppData } from './apps-and-features-data';
 export class AppsAndFeaturesService {
     public static psKey = 'sme.seed';
     private psSession: PowerShellSession;
+    public strings = MsftSme.resourcesStrings<Strings>();
 
     constructor(private appContextService: AppContextService) {
     }
@@ -26,7 +27,6 @@ export class AppsAndFeaturesService {
             .map(response => {
                 const result: AppData[] = [];
                 if (response) {
-                    console.log(response)
                     for (const item of response.results) {
                         if (item) {
                             const data: AppData = {
@@ -34,10 +34,11 @@ export class AppsAndFeaturesService {
                                 publisher: item.vendor,
                                 prodID: item.identifyingNumber,
                                 version: item.version,
-                                installDate: item.installDate,
-                                selected: false
+                                installDate: this.formatDate(item.installDate)
                             };
-                            result.push(data);
+                            if (data.displayName != null) {
+                                result.push(data);
+                            }
                         }
                     }
                 }
@@ -45,16 +46,18 @@ export class AppsAndFeaturesService {
             });
     }
 
+    public formatDate(date: string) {
+        if (date != null) {
+            let day = date.substring(6);
+            let month = date.substring(4, 6);
+            let year = date.substring(0, 4);
+            return this.strings.date.format(month, day, year);
+        }
+        return '';
+    }
+
     public removeApp(session: PowerShellSession, productID: string): Observable<any[]> {
-        console.log('Service class')
         let command = PowerShell.createScript(PowerShellScripts.Get_Process, { prodID: productID });
-        return this.appContextService.powerShell.run(session, command)
-            .map(response => {
-                console.log('before response check')
-                if (response) {
-                    console.log('removed app output')
-                    console.log(response)
-                }
-            });
+        return this.appContextService.powerShell.run(session, command);
     }
 }

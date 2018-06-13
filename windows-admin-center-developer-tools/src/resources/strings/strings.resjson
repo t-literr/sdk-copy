@@ -53,5 +53,6 @@
     "remove_title": "Remove '{0}'",
     "remove_description": "Removing '{0}'",
     "remove_success": "Application '{0}' successfully removed",
-    "remove_error": "Failed to remove application '{0}'"
+    "remove_error": "Failed to remove application '{0}'",
+    "date": "{0}/{1}/{2}"
 }

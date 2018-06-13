@@ -11,6 +11,5 @@ export class AppData {
     public publisher: string;
     public prodID: string;
     public version: string;
-    public installDate: string;
-    public selected: boolean;
+    public installDate: any;
 }

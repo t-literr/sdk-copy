@@ -63,6 +63,7 @@ export class AppsAndFeaturesComponent extends AppNotifications implements OnInit
 
     // reload page in the event an app is removed
     public refresh() {
+        console.log('hit refresh')
         this.loading = true;
         this.getApps();
     }
@@ -90,56 +91,72 @@ export class AppsAndFeaturesComponent extends AppNotifications implements OnInit
     }
 
     /*
+    // Join all names of selected apps with commas to pass to confirmation dialogue
+    */
+    public listSelected(): string {
+        let names = []
+        this.selectedApps.forEach(element => {
+            names.push(element.displayName)
+        });
+        return names.join(', ');
+    }
+
+    /*
     //  Uninstall the selected application
     */
-    public removeApp(prodID: string): void {
+    public removeSelected(): void {
         // issue notifications while remove is processing
         let removeStrings = this.strings.remove;
-        let notifSettings = this.createClientNotification(removeStrings.title.format(this.selection.displayName),
-                                                          removeStrings.description.format(this.selection.displayName),
-                                                          removeStrings.description.format(this.selection.displayName));
 
         // double check user really wants to remove selected application
         this.appContextService.frame.showDialogConfirmation({
             confirmButtonText: this.strings.yes,
             cancelButtonText: this.strings.cancel,
             title: this.strings.removeApp,
-            message: this.strings.areYouSureRemove.format(this.selection.displayName)
+            message: this.strings.areYouSureRemove.format(this.listSelected())
         }).switchMap((result: ConfirmationDialogResult) => {
             this.loading = true;
             if (result.confirmed) {
-                // ok to start notifications because process has now started
-                let notif = this.appContextService.notification.notify(
-                    this.appContextService.gateway.gatewayName, notifSettings
-                );
+                this.selectedApps.forEach(element => {
+                    let notifSettings = this.createClientNotification(removeStrings.title.format(element.displayName),
+                                                                      removeStrings.description.format(element.displayName),
+                                                                      removeStrings.description.format(element.displayName));
+                    // ok to start notifications because remove process has now started
+                    let notif = this.appContextService.notification.notify(
+                            this.appContextService.gateway.gatewayName, notifSettings
+                    );
 
-                this.appSubscription = this.appsService.removeApp(this.psSession, prodID).subscribe(
-                    (resultApps: any) => {
-                        this.updateNotification(
-                            notif, notifSettings,
-                            removeStrings.success.format(this.selection.displayName),
-                            NotificationState.Success
-                        );
-                        this.selection = null;
-                    },
-                    (error: AjaxError) => {
-                        this.loading = false;
-                        console.log('reached error 1')
-                        this.updateNotification(
-                            notif, notifSettings,
-                            removeStrings.error.format(this.selection.displayName, Net.getErrorMessage(error)),
-                            NotificationState.Error
-                        );
-                    }
-                );
+                    this.appSubscription = this.appsService.removeApp(this.psSession, element.prodID).subscribe(
+                        (resultApps: any) => {
+                            this.updateNotification(
+                                notif, notifSettings,
+                                removeStrings.success.format(this.selection.displayName),
+                                NotificationState.Success
+                            );
+                            this.apps.remove(element)
+                            this.selectedApps.remove(element)
+                        },
+                        (error: AjaxError) => {
+                            this.loading = false;
+                            console.log('reached error 1')
+                            this.updateNotification(
+                                notif, notifSettings,
+                                removeStrings.error.format(this.selection.displayName, Net.getErrorMessage(error)),
+                                NotificationState.Error
+                            );
+                        }
+                    );
+                });
+                this.refresh()
+            } else {
+                this.loading = false;
             }
-            this.refresh()
             return Observable.empty();
         })
         .subscribe(
             (removeResult) => {
                 if (removeResult) {
-                    // todo
+                    // TODO
                 }
             },
             error => {

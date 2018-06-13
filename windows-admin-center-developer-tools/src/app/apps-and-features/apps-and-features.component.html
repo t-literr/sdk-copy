@@ -7,7 +7,7 @@
             <sme-loading-wheel *ngIf="loading"></sme-loading-wheel>
             <sme-action-bar #actionBar>
                 <sme-action-button #action [text]="'Add New'" [iconClass]="'sme-icon icon-win-add'"></sme-action-button>
-                <sme-action-button #action [text]="'Remove Selected'" [iconClass]="'sme-icon icon-win-delete'" (execute)="removeApp(selectedApps)"></sme-action-button>
+                <sme-action-button #action [text]="'Remove Selected'" [iconClass]="'sme-icon icon-win-delete'" (execute)="removeSelected()"></sme-action-button>
             </sme-action-bar>
 
             <input #search type="search" pInputText autofocus>
@@ -17,7 +17,7 @@
                 </sme-data-table-column>
                 <sme-data-table-column field="publisher" header="Publisher" sortable="true" [searchable]="false">
                 </sme-data-table-column>
-                <sme-data-table-column field="installDate" header="Install Date" sortable="true" [searchable]="false">
+                <sme-data-table-column field="installDate" header="Installed On" sortable="true" [searchable]="false">
                 </sme-data-table-column>
             </sme-data-table>
         </sme-master-view>
@@ -37,7 +37,7 @@
                     <div>{{selection.publisher}}</div>
                   </div>
                   <div>
-                    <label *ngIf="selection.displayName">{{strings.listItem.format("Install Date")}}</label>
+                    <label *ngIf="selection.displayName">{{strings.listItem.format("Installed On")}}</label>
                     <div>{{selection.installDate}}</div>
                   </div>
                   <div>
